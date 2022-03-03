@@ -4,20 +4,15 @@
   <el-button type="success">Success</el-button>
   <el-input v-model="input" placeholder="Please input" />
   <el-tag type="success">标签二</el-tag>
+  <div>{{ store.counter }}</div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import mainStore from '@/store'
 
-export default defineComponent({
-  setup() {
-    const input = ref('')
-
-    return {
-      input
-    }
-  }
-})
+const store = mainStore()
+const input = ref('')
 </script>
 
 <style scoped></style>
