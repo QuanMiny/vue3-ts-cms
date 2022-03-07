@@ -8,5 +8,20 @@ createApp(App).use(createPinia()).use(router).mount('#app')
 
 ymRequest.request({
   url: '/home/multidata',
-  method: 'GET'
+  method: 'GET',
+  interceptors: {
+    requestInterceptor: (config) => {
+      console.log('单独请求的config')
+      return config
+    },
+    responseInterceptor: (res) => {
+      console.log('单独请求的res')
+      return res
+    }
+  }
 })
+
+// ymRequest.request({
+//   url: '/home/multidata',
+//   method: 'GET'
+// })
