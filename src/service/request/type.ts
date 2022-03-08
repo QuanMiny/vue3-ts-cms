@@ -9,4 +9,5 @@ export interface YMRequestInterceptors {
 
 export interface YMRequestConfig extends AxiosRequestConfig {
   interceptors?: YMRequestInterceptors
+  showLoading?: boolean
 }

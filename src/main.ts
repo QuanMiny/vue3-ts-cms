@@ -18,7 +18,8 @@ ymRequest.request({
       console.log('单独请求的res')
       return res
     }
-  }
+  },
+  showLoading: true
 })
 
 // ymRequest.request({
