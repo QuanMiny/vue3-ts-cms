@@ -1,13 +1,14 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 
-export interface YMRequestInterceptors {
+export interface YMRequestInterceptors<T = AxiosResponse<any, any>> {
   requestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig
   requestInterceptorCatch?: (error: any) => any
-  responseInterceptor?: (config: AxiosResponse) => AxiosResponse
+  responseInterceptor?: (config: T) => T
   responseInterceptorCatch?: (error: any) => any
 }
 
-export interface YMRequestConfig extends AxiosRequestConfig {
-  interceptors?: YMRequestInterceptors
+export interface YMRequestConfig<T = AxiosResponse<any, any>>
+  extends AxiosRequestConfig {
+  interceptors?: YMRequestInterceptors<T>
   showLoading?: boolean
 }

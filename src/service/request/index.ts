@@ -55,7 +55,7 @@ class YMRequest {
         console.log('所有实例都有的拦截器：响应拦截成功')
         // 将loading移除
         this.loading?.close()
-        return res
+        return res.data
       },
       (err) => {
         console.log('所有实例都有的拦截器：响应拦截失败')
@@ -67,30 +67,51 @@ class YMRequest {
     )
   }
 
-  request(config: YMRequestConfig): void {
-    if (config.interceptors?.requestInterceptor) {
-      config = config.interceptors.requestInterceptor(config)
-    }
+  request<T>(config: YMRequestConfig<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      // 单个请求对请求config的处理
+      if (config.interceptors?.requestInterceptor) {
+        config = config.interceptors.requestInterceptor(config)
+      }
+      // 判断是否需要loading
+      if (config.showLoading === false) {
+        this.showLoading = config.showLoading
+      }
 
-    if (config.showLoading === false) {
-      this.showLoading = config.showLoading
-    }
+      this.instance
+        .request<any, T>(config)
+        .then((res) => {
+          // 1.单个请求对数据的处理
+          if (config.interceptors?.responseInterceptor) {
+            res = config.interceptors.responseInterceptor(res)
+          }
+          // 2.将showLoading设置为true，这样不会影响下一个请求
+          this.showLoading = DEFAULT_LOADING
+          // 3.将结果返回出去
+          resolve(res)
+        })
+        .catch((err) => {
+          // 将showLoading设置为true，这样不会影响下一个请求
+          this.showLoading = DEFAULT_LOADING
+          reject(err)
+        })
+    })
+  }
 
-    this.instance
-      .request(config)
-      .then((res) => {
-        if (config.interceptors?.responseInterceptor) {
-          res = config.interceptors.responseInterceptor(res)
-        }
-        console.log(res)
-        // 将showLoading设置为true，这样不会影响下一个请求
-        this.showLoading = DEFAULT_LOADING
-      })
-      .catch((err) => {
-        // 将showLoading设置为true，这样不会影响下一个请求
-        this.showLoading = DEFAULT_LOADING
-        return err
-      })
+  get<T>(config: YMRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'GET' })
+  }
+
+  post<T>(config: YMRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'POST' })
+  }
+
+  delete<T>(config: YMRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'DELETE' })
+  }
+
+  patch<T>(config: YMRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'PATCH' })
   }
 }
 
