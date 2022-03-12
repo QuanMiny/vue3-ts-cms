@@ -11,7 +11,8 @@
         <el-input v-model="account.name"> </el-input>
       </el-form-item>
       <el-form-item label="密码" prop="pwd">
-        <el-input type="password" v-model="account.pwd"> </el-input>
+        <el-input type="password" v-model="account.pwd" show-password>
+        </el-input>
       </el-form-item>
     </el-form>
   </div>
@@ -21,18 +22,25 @@
 import { ElForm } from 'element-plus'
 import { reactive, ref, defineExpose } from 'vue'
 import rules from '../config/account-config'
+import localCache from '@/utils/cache'
 
 const account = reactive({
-  name: '',
-  pwd: ''
+  name: localCache.getCache('name') ?? '',
+  pwd: localCache.getCache('pwd') ?? ''
 })
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 
-const loginAction = () => {
+const loginAction = (isKeepPassword: boolean) => {
   formRef.value?.validate((valid) => {
     if (valid) {
-      console.log('登录')
+      if (isKeepPassword) {
+        localCache.setCache('name', account.name)
+        localCache.setCache('pwd', account.pwd)
+      } else {
+        localCache.deleteCache('name')
+        localCache.deleteCache('pwd')
+      }
     }
   })
 }
