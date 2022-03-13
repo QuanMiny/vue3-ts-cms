@@ -35,7 +35,7 @@ class YMRequest {
     // 添加所有实例都有的拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        console.log('所有实例都有的拦截器：请求拦截成功')
+        // console.log('所有实例都有的拦截器：请求拦截成功')
         if (this.showLoading) {
           this.loading = ElLoading.service({
             lock: true,
@@ -52,13 +52,13 @@ class YMRequest {
     )
     this.instance.interceptors.response.use(
       (res) => {
-        console.log('所有实例都有的拦截器：响应拦截成功')
+        // console.log('所有实例都有的拦截器：响应拦截成功')
         // 将loading移除
         this.loading?.close()
         return res.data
       },
       (err) => {
-        console.log('所有实例都有的拦截器：响应拦截失败')
+        // console.log('所有实例都有的拦截器：响应拦截失败')
 
         // 将loading移除
         this.loading?.close()
@@ -79,7 +79,7 @@ class YMRequest {
       }
 
       this.instance
-        .request<any, T>(config)
+        .request<any, T, any>(config)
         .then((res) => {
           // 1.单个请求对数据的处理
           if (config.interceptors?.responseInterceptor) {

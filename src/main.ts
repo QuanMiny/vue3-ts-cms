@@ -5,8 +5,13 @@ import 'normalize.css'
 import './assets/css/index.less'
 
 import router from './router'
-import { createPinia } from 'pinia'
+import { setupStore } from './store'
+import { initAppConfigStore } from './logics/initAppConfig'
 
 const app = createApp(App)
 
-app.use(createPinia()).use(router).mount('#app')
+setupStore(app)
+
+initAppConfigStore()
+
+app.use(router).mount('#app')

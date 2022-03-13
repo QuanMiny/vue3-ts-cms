@@ -9,6 +9,5 @@ declare global {
   const ElLink: typeof import('element-plus/es')['ElLink']
   const ElTabPane: typeof import('element-plus/es')['ElTabPane']
   const ElTabs: typeof import('element-plus/es')['ElTabs']
-  const ElTag: typeof import('element-plus/es')['ElTag']
 }
 export {}

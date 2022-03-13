@@ -1,23 +1,8 @@
-import { defineStore } from 'pinia'
+import type { App } from 'vue'
+import { createPinia } from 'pinia'
 
-const mainStore = defineStore('main', {
-  state: () => {
-    return {
-      name: 'ming',
-      counter: 1
-    }
-  },
-  getters: {
-    doubleCount: (state) => state.counter * 2
-  },
-  actions: {
-    increment() {
-      this.counter++
-    },
-    randomizeCounter() {
-      this.counter = Math.round(100 * Math.random())
-    }
-  }
-})
+export const store = createPinia()
 
-export default mainStore
+export function setupStore(app: App) {
+  app.use(store)
+}
