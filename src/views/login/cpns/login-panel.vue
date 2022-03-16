@@ -32,14 +32,14 @@
 </template>
 
 <script lang="ts" setup>
-import { User as userIcon, Iphone as iphoneIcon } from '@element-plus/icons-vue'
+import { User as UserIcon, Iphone as IphoneIcon } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 
-import loginAccount from './login-account.vue'
-import loginPhone from './login-phone.vue'
+import LoginAccount from './login-account.vue'
+import LoginPhone from './login-phone.vue'
 
 const isKeepPassword = ref(true)
-const accountRef = ref<InstanceType<typeof loginAccount>>()
+const accountRef = ref<InstanceType<typeof LoginAccount>>()
 
 const handleLoginClick = () => {
   accountRef.value?.loginAction(isKeepPassword.value)
