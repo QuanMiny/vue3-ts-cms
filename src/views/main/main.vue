@@ -1,18 +1,83 @@
 <template>
-  <div>Main</div>
-  <el-button type="primary">Primary</el-button>
-  <el-button type="success">Success</el-button>
-  <el-input v-model="input" placeholder="Please input" />
-  <el-tag type="success">标签二</el-tag>
-  <div>{{ store.counter }}</div>
+  <div class="main">
+    <el-container class="main-content">
+      <el-aside :width="isCollapse ? '63px' : '200px'">
+        <nav-menu :collapse="isCollapse"></nav-menu>
+      </el-aside>
+      <el-container class="page">
+        <el-header class="page-header">
+          <nav-header @collapse-change="handleCollapseChange"></nav-header>
+        </el-header>
+        <el-main class="page-content">
+          <div class="page-info">main</div>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import NavMenu from '@/components/nav-menu'
+import NavHeader from '@/components/nav-header'
 import { ref } from 'vue'
-import mainStore from '@/store'
 
-const store = mainStore()
-const input = ref('')
+const isCollapse = ref(false)
+
+const handleCollapseChange = (isFold: boolean) => {
+  isCollapse.value = isFold
+}
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.main-content,
+.page {
+  height: 100%;
+}
+
+.page-header {
+  height: 48px !important;
+  display: flex;
+  color: #333;
+  text-align: center;
+  align-items: center;
+}
+
+.page-content {
+  height: calc(100% - 48px);
+
+  .page-info {
+    background-color: #fff;
+    border-radius: 5px;
+  }
+}
+
+.el-aside {
+  overflow-x: hidden;
+  overflow-y: auto;
+  line-height: 200px;
+  text-align: left;
+  cursor: pointer;
+  background-color: #001529;
+  transition: width 0.3s linear;
+  scrollbar-width: none; /* firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.el-main {
+  color: #333;
+  text-align: center;
+  background-color: #f0f2f5;
+}
+</style>

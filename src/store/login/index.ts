@@ -18,7 +18,11 @@ export const useLoginStore = defineStore({
     userMenus: [],
     permissions: []
   }),
-  getters: {},
+  getters: {
+    getUserMenus(): any {
+      return this.userMenus
+    }
+  },
   actions: {
     changeToken(token: string) {
       this.token = token
