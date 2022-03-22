@@ -29,14 +29,20 @@
               <span>{{ item.name }}</span>
             </template>
             <template v-for="subitem in item.children" :key="subitem.id">
-              <el-menu-item :index="subitem.id + ''">
+              <el-menu-item
+                :index="subitem.id + ''"
+                @click="handleMenuItemClick(subitem)"
+              >
                 <span>{{ subitem.name }}</span>
               </el-menu-item>
             </template>
           </el-sub-menu>
         </template>
         <template v-else-if="item.type === 2">
-          <el-menu-item :index="item.id + ''">
+          <el-menu-item
+            :index="item.id + ''"
+            @click="handleMenuItemClick(item)"
+          >
             <span>{{ item.name }}</span>
           </el-menu-item>
         </template>
@@ -54,6 +60,8 @@ import {
   ChatLineRound as ChatLineRoundIcon
 } from '@element-plus/icons-vue'
 
+import router from '@/router'
+
 import { useLoginStoreWithOut } from '@/store/login'
 import { defineProps } from 'vue'
 
@@ -66,6 +74,12 @@ defineProps({
 
 const userLoginStore = useLoginStoreWithOut()
 const userMenus = userLoginStore.getUserMenus
+
+const handleMenuItemClick = (item: any) => {
+  router.push({
+    path: item.url ?? '/not-found'
+  })
+}
 </script>
 
 <style lang="less" scoped>

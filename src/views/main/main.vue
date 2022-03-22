@@ -9,7 +9,7 @@
           <nav-header @collapse-change="handleCollapseChange"></nav-header>
         </el-header>
         <el-main class="page-content">
-          <div class="page-info">main</div>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>

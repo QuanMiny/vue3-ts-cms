@@ -8,6 +8,7 @@ import {
   requestUserMenusByRoleId
 } from '@/service/login'
 import localCache from '@/utils/cache'
+import { mapMenusToRoutes } from '@/utils/map-menus'
 import router from '@/router'
 
 export const useLoginStore = defineStore({
@@ -32,6 +33,12 @@ export const useLoginStore = defineStore({
     },
     changeUserMenus(userMenus: any) {
       this.userMenus = userMenus
+      // userMenus => routes
+      const routes = mapMenusToRoutes(userMenus)
+      // 将 routes => router.main.children
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     },
     /**
      *
