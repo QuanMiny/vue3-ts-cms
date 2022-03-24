@@ -9,6 +9,7 @@
       background-color="#001529"
       text-color="#ffffffa6"
       :collapse="collapse"
+      :default-active="defaultValue"
     >
       <template v-for="item in userMenus" :key="item.id + ''">
         <template v-if="item.type === 1">
@@ -60,10 +61,11 @@ import {
   ChatLineRound as ChatLineRoundIcon
 } from '@element-plus/icons-vue'
 
-import router from '@/router'
-
+import { useRouter, useRoute } from 'vue-router'
+import { ref } from 'vue'
 import { useLoginStoreWithOut } from '@/store/login'
 import { defineProps } from 'vue'
+import { pathMapToMenu } from '@/utils/map-menus'
 
 defineProps({
   collapse: {
@@ -75,6 +77,13 @@ defineProps({
 const userLoginStore = useLoginStoreWithOut()
 const userMenus = userLoginStore.getUserMenus
 
+// 刷新页面可获取当前路径
+const currentPath = useRoute().path
+const currentMenu = pathMapToMenu(userMenus, currentPath)
+const defaultValue = ref(currentMenu.id + '')
+
+// 路径跳转
+const router = useRouter()
 const handleMenuItemClick = (item: any) => {
   router.push({
     path: item.url ?? '/not-found'
