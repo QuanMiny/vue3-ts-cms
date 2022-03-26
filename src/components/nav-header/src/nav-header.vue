@@ -9,17 +9,20 @@
       </template>
     </el-icon>
     <div class="content">
-      <div>面包屑</div>
+      <ym-breadcrumb :breadcrumbs="breadcrumbs" />
       <user-info />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Fold as FoldIcon, Expand as ExpandIcon } from '@element-plus/icons-vue'
-import { ref, defineEmits } from 'vue'
-
+import YmBreadcrumb from '@/base-ui/breadcrumb'
 import UserInfo from './user-info.vue'
+import { Fold as FoldIcon, Expand as ExpandIcon } from '@element-plus/icons-vue'
+import { ref, defineEmits, computed } from 'vue'
+import { pathMapBreadcrumbs } from '@/utils/map-menus'
+import { useLoginStoreWithOut } from '@/store/login'
+import { useRoute } from 'vue-router'
 
 const isFold = ref(false)
 
@@ -29,6 +32,14 @@ const handleCollapseClick = () => {
   isFold.value = !isFold.value
   emits('collapseChange', isFold.value)
 }
+
+const breadcrumbs = computed(() => {
+  const userLoginStore = useLoginStoreWithOut()
+  const userMenus = userLoginStore.getUserMenus
+  // 可获取当前路径
+  const currentPath = useRoute().path
+  return pathMapBreadcrumbs(userMenus, currentPath)
+})
 </script>
 
 <style lang="less" scoped>
