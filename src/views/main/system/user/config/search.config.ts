@@ -35,7 +35,7 @@ export const searchFormConfig: IForm = {
       otherOptions: {
         startPlaceholder: '开始时间',
         endPlaceholder: '结束时间',
-        type: 'datetimerange'
+        type: 'daterange'
       }
     }
   ]
