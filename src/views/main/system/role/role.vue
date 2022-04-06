@@ -1,18 +1,18 @@
 <template>
   <div class="role">
-    <h2>role</h2>
+    <page-search :search-form-config="searchFormConfig" />
+    <page-content
+      :content-table-config="contentTableConfig"
+      page-name="role"
+    ></page-content>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'role',
-  setup() {
-    return {}
-  }
-})
+<script lang="ts" setup>
+import PageSearch from '@/components/page-search'
+import PageContent from '@/components/page-content'
+import { searchFormConfig } from './config/search.config'
+import { contentTableConfig } from './config/content.config'
 </script>
 
-<style scoped></style>
+<style scoped lang="less"></style>
