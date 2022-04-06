@@ -8,7 +8,7 @@ export const contentTableConfig = {
     { prop: 'roleId', label: '角色', minWidth: 100 },
     {
       prop: 'createAt',
-      label: '创建世间',
+      label: '创建时间',
       minWidth: 180,
       slotName: 'createAt'
     },
