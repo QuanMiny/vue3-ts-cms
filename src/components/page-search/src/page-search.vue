@@ -6,8 +6,15 @@
       </template>
       <template #footer>
         <div class="handle-btns">
-          <el-button :icon="RefreshIcon">重置</el-button>
-          <el-button type="primary" :icon="SearchIcon">搜索</el-button>
+          <el-button :icon="RefreshIcon" @click="handleResetClick"
+            >重置</el-button
+          >
+          <el-button
+            type="primary"
+            :icon="SearchIcon"
+            @click="handleQuerySearch"
+            >搜索</el-button
+          >
         </div>
       </template>
     </ym-form>
@@ -21,22 +28,35 @@ import {
 } from '@element-plus/icons-vue'
 
 import YmForm from '@/base-ui/form'
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, defineEmits } from 'vue'
 
-defineProps({
+const props = defineProps({
   searchFormConfig: {
     type: Object,
     require: true
   }
 })
 
-const formData = ref({
-  id: '',
-  name: '',
-  password: '',
-  sport: '',
-  createTime: ''
-})
+const emits = defineEmits(['resetClick', 'querySearch'])
+
+const formItems = props.searchFormConfig?.formItems ?? []
+const formOriginData: any = {}
+for (const item of formItems) {
+  formOriginData[item.field] = ''
+}
+
+const formData = ref(formOriginData)
+
+const handleResetClick = () => {
+  for (const key in formOriginData) {
+    formData.value[`${key}`] = formOriginData[key]
+  }
+  emits('resetClick')
+}
+
+const handleQuerySearch = () => {
+  emits('querySearch', formData.value)
+}
 </script>
 
 <style lang="less" scoped>

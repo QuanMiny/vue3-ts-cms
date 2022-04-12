@@ -1,6 +1,11 @@
 <template>
   <div class="page-content">
-    <ym-table :list-data="dataList" v-bind="contentTableConfig">
+    <ym-table
+      :list-data="dataList"
+      :list-count="dataCount"
+      v-model:page="pageInfo"
+      v-bind="contentTableConfig"
+    >
       <!-- 头部处理插槽 -->
       <template #header-handler>
         <el-button type="primary">新建用户</el-button>
@@ -31,7 +36,7 @@
 <script setup lang="ts">
 import YmTable from '@/base-ui/table'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@element-plus/icons-vue'
-import { defineProps } from 'vue'
+import { defineProps, defineExpose, ref, watch } from 'vue'
 
 import { useSystemStoreWithOut } from '@/store/system'
 import { computed } from 'vue'
@@ -49,18 +54,31 @@ const props = defineProps({
 
 const SystemStore = useSystemStoreWithOut()
 
-SystemStore.getPageListAction({
-  pageName: props.pageName,
-  queryInfo: {
-    offset: 0,
-    size: 10
-  }
-})
+const pageInfo = ref({ currentPage: 1, pageSize: 10 })
+
+watch(pageInfo, () => getPageData())
+
+const getPageData = (queryInfo: any = {}) => {
+  SystemStore.getPageListAction({
+    pageName: props.pageName,
+    queryInfo: {
+      offset: (pageInfo.value.currentPage - 1) * pageInfo.value.pageSize,
+      size: pageInfo.value.pageSize,
+      ...queryInfo
+    }
+  })
+}
+
+getPageData()
 
 const dataList = computed(() =>
   SystemStore.pageListData(props.pageName as string)
 )
-// const usersCount = computed(() => SystemStore.getUsersCount)
+const dataCount = computed(() =>
+  SystemStore.pageListCount(props.pageName as string)
+)
+
+defineExpose({ getPageData })
 </script>
 
 <style lang="less" scoped>
