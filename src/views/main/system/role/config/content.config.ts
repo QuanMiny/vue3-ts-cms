@@ -18,5 +18,5 @@ export const contentTableConfig = {
     { label: '操作', minWidth: 120, slotName: 'handler' }
   ],
   showColumnIndex: true,
-  showSelection: true
+  showSelection: false
 }
