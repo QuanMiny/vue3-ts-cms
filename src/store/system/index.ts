@@ -9,7 +9,9 @@ export const useSystemStore = defineStore({
     usersList: [],
     usersCount: 0,
     roleList: [],
-    roleCount: 0
+    roleCount: 0,
+    goodsList: [],
+    goodsCount: 0
   }),
   getters: {
     pageListData(state) {
