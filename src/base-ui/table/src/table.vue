@@ -12,6 +12,7 @@
       border
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      v-bind="childrenProps"
     >
       <el-table-column v-if="showSelection" type="selection" align="center">
       </el-table-column>
@@ -84,6 +85,10 @@ const props = defineProps({
   showSelection: {
     type: Boolean,
     default: false
+  },
+  childrenProps: {
+    type: Object,
+    default: () => ({})
   }
 })
 
