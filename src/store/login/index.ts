@@ -8,7 +8,7 @@ import {
   requestUserMenusByRoleId
 } from '@/service/login'
 import localCache from '@/utils/cache'
-import { mapMenusToRoutes } from '@/utils/map-menus'
+import { mapMenusToRoutes, mapMenusToPermissions } from '@/utils/map-menus'
 import router from '@/router'
 
 export const useLoginStore = defineStore({
@@ -22,6 +22,9 @@ export const useLoginStore = defineStore({
   getters: {
     getUserMenus(): any {
       return this.userMenus
+    },
+    getPermissions(): any {
+      return this.permissions
     }
   },
   actions: {
@@ -39,6 +42,9 @@ export const useLoginStore = defineStore({
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
+      // 获取用户按钮的权限
+      const permissions = mapMenusToPermissions(userMenus)
+      this.permissions = permissions
     },
     /**
      *

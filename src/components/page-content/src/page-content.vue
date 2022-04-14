@@ -8,7 +8,7 @@
     >
       <!-- 头部处理插槽 -->
       <template #header-handler>
-        <el-button type="primary">新建用户</el-button>
+        <el-button type="primary" v-if="isCreate">新建用户</el-button>
       </template>
       <!-- 表格列的插槽 -->
       <template #enable="scope">
@@ -26,8 +26,12 @@
         <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
       </template>
       <template #handler>
-        <el-button size="small" type="text" :icon="EditIcon">编辑</el-button>
-        <el-button size="small" type="text" :icon="DeleteIcon">删除</el-button>
+        <el-button size="small" type="text" :icon="EditIcon" v-if="isUpdate">
+          编辑
+        </el-button>
+        <el-button size="small" type="text" :icon="DeleteIcon" v-if="isDelete">
+          删除
+        </el-button>
       </template>
       <!-- 在page-content中动态插入剩余的插槽 -->
       <template
@@ -47,7 +51,7 @@
 import YmTable from '@/base-ui/table'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@element-plus/icons-vue'
 import { defineProps, defineExpose, ref, watch } from 'vue'
-
+import { usePermission } from '@/hooks/usePermission'
 import { useSystemStoreWithOut } from '@/store/system'
 import { computed } from 'vue'
 
@@ -73,6 +77,12 @@ const otherPropSlots = props.contentTableConfig?.propList.filter(
   }
 )
 
+// 获取操作的权限
+const isCreate = usePermission(props.pageName, 'create')
+const isUpdate = usePermission(props.pageName, 'update')
+const isDelete = usePermission(props.pageName, 'delete')
+const isQuery = usePermission(props.pageName, 'query')
+
 const SystemStore = useSystemStoreWithOut()
 
 const pageInfo = ref({ currentPage: 1, pageSize: 10 })
@@ -80,6 +90,7 @@ const pageInfo = ref({ currentPage: 1, pageSize: 10 })
 watch(pageInfo, () => getPageData())
 
 const getPageData = (queryInfo: any = {}) => {
+  if (!isQuery) return
   SystemStore.getPageListAction({
     pageName: props.pageName,
     queryInfo: {
