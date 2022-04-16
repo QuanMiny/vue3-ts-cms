@@ -13,7 +13,9 @@ export const useSystemStore = defineStore({
     goodsList: [],
     goodsCount: 0,
     menuList: [],
-    menuCount: 0
+    menuCount: 0,
+    departmentList: [],
+    departmentCount: 0
   }),
   getters: {
     pageListData(state) {
