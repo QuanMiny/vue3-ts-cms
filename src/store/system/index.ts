@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
 import { ISystemState } from './type'
-import { getPageListData } from '@/service/system'
+import { getPageListData, deletePageData } from '@/service/system'
 
 export const useSystemStore = defineStore({
   id: 'app-system',
@@ -48,6 +48,15 @@ export const useSystemStore = defineStore({
       // 3.修改state的数据
       this.changeList(list, pageName)
       this.changeCount(totalCount, pageName)
+    },
+    async deletePageDataAction(payload: any) {
+      const { pageName, id } = payload
+      const deleteUrl = `/${pageName}/${id}`
+      await deletePageData(deleteUrl)
+      this.getPageListAction({
+        pageName: pageName,
+        queryInfo: { offset: 0, size: 10 }
+      })
     }
   }
 })

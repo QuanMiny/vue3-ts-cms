@@ -25,11 +25,17 @@
       <template #updateAt="scope">
         <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
       </template>
-      <template #handler>
+      <template #handler="scope">
         <el-button size="small" type="text" :icon="EditIcon" v-if="isUpdate">
           编辑
         </el-button>
-        <el-button size="small" type="text" :icon="DeleteIcon" v-if="isDelete">
+        <el-button
+          size="small"
+          type="text"
+          :icon="DeleteIcon"
+          v-if="isDelete"
+          @click="handleDeleteClick(scope.row)"
+        >
           删除
         </el-button>
       </template>
@@ -83,12 +89,11 @@ const isUpdate = usePermission(props.pageName, 'update')
 const isDelete = usePermission(props.pageName, 'delete')
 const isQuery = usePermission(props.pageName, 'query')
 
+// 利用pinia请求数据并保存
 const SystemStore = useSystemStoreWithOut()
 
 const pageInfo = ref({ currentPage: 1, pageSize: 10 })
-
 watch(pageInfo, () => getPageData())
-
 const getPageData = (queryInfo: any = {}) => {
   if (!isQuery) return
   SystemStore.getPageListAction({
@@ -100,15 +105,20 @@ const getPageData = (queryInfo: any = {}) => {
     }
   })
 }
-
 getPageData()
-
+// 读取pinia保存的数据
 const dataList = computed(() =>
   SystemStore.pageListData(props.pageName as string)
 )
 const dataCount = computed(() =>
   SystemStore.pageListCount(props.pageName as string)
 )
+
+// 删除/编辑/新增
+const handleDeleteClick = (item: any) => {
+  if (!isDelete) return
+  SystemStore.deletePageDataAction({ pageName: props.pageName, id: item.id })
+}
 
 defineExpose({ getPageData })
 </script>
