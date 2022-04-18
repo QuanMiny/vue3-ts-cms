@@ -8,6 +8,7 @@
         <template v-for="item in formItems" :key="item.label">
           <el-col v-bind="colLayout">
             <el-form-item
+              v-if="!item.isHidden"
               :label="item.label"
               :rules="item.rules"
               :style="itemStyle"
@@ -18,14 +19,16 @@
                 <el-input
                   :placeholder="item.placeholder"
                   :show-password="item.type === 'password'"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 ></el-input>
               </template>
               <template v-else-if="item.type === 'select'">
                 <el-select
                   :placeholder="item.placeholder"
                   style="width: 100%"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -38,7 +41,8 @@
               <template v-else-if="item.type === 'datepicker'">
                 <el-date-picker
                   v-bind="item.otherOptions"
-                  v-model="formData[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:modelValue="handleValueChange($event, item.field)"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -53,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, PropType, ref, defineEmits, watch } from 'vue'
+import { defineProps, PropType, defineEmits } from 'vue'
 import { IFormItem } from '../types'
 
 const props = defineProps({
@@ -88,11 +92,15 @@ const props = defineProps({
 })
 const emits = defineEmits(['update:modelValue'])
 
-const formData = ref({ ...props.modelValue })
+// const formData = ref({ ...props.modelValue })
 
-watch(formData, (newValue) => emits('update:modelValue', newValue), {
-  deep: true
-})
+// watch(formData, (newValue) => emits('update:modelValue', newValue), {
+//   deep: true
+// })
+
+const handleValueChange = (value: any, field: string) => {
+  emits('update:modelValue', { ...props.modelValue, [field]: value })
+}
 </script>
 
 <style lang="less" scoped>

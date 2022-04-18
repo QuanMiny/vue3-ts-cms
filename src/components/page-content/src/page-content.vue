@@ -8,7 +8,9 @@
     >
       <!-- 头部处理插槽 -->
       <template #header-handler>
-        <el-button type="primary" v-if="isCreate">新建用户</el-button>
+        <el-button type="primary" v-if="isCreate" @click="handleNewClick">
+          新建数据
+        </el-button>
       </template>
       <!-- 表格列的插槽 -->
       <template #enable="scope">
@@ -26,7 +28,13 @@
         <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
       </template>
       <template #handler="scope">
-        <el-button size="small" type="text" :icon="EditIcon" v-if="isUpdate">
+        <el-button
+          size="small"
+          type="text"
+          :icon="EditIcon"
+          v-if="isUpdate"
+          @click="handleEditClick(scope.row)"
+        >
           编辑
         </el-button>
         <el-button
@@ -56,7 +64,7 @@
 <script setup lang="ts">
 import YmTable from '@/base-ui/table'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@element-plus/icons-vue'
-import { defineProps, defineExpose, ref, watch } from 'vue'
+import { defineProps, defineExpose, defineEmits, ref, watch } from 'vue'
 import { usePermission } from '@/hooks/usePermission'
 import { useSystemStoreWithOut } from '@/store/system'
 import { computed } from 'vue'
@@ -118,6 +126,16 @@ const dataCount = computed(() =>
 const handleDeleteClick = (item: any) => {
   if (!isDelete) return
   SystemStore.deletePageDataAction({ pageName: props.pageName, id: item.id })
+}
+
+const emits = defineEmits(['newBtnClick', 'editBtnClick'])
+
+const handleNewClick = () => {
+  emits('newBtnClick')
+}
+
+const handleEditClick = (item: any) => {
+  emits('editBtnClick', item)
 }
 
 defineExpose({ getPageData })
