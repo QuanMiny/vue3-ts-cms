@@ -11,6 +11,9 @@ import localCache from '@/utils/cache'
 import { mapMenusToRoutes, mapMenusToPermissions } from '@/utils/map-menus'
 import router from '@/router'
 
+import { useAppStoreWithOut } from '@/store/app'
+const AppStore = useAppStoreWithOut()
+
 export const useLoginStore = defineStore({
   id: 'app-login',
   state: (): ILoginState => ({
@@ -54,8 +57,12 @@ export const useLoginStore = defineStore({
       // 1.登录请求
       const loginResult = await accountLoginRequest(payload)
       const { id, token } = loginResult.data
-      this.changeToken(token)
-      localCache.setCache('token', token)
+      if (token) {
+        this.changeToken(token)
+        localCache.setCache('token', token)
+        // 动态获取部门和列表数据
+        AppStore.getInitialDataAction()
+      }
 
       // 2.请求用户信息
       const userInfoResult = await requestUserInfoById(id)
@@ -80,6 +87,8 @@ export const useLoginStore = defineStore({
       const token = localCache.getCache('token')
       if (token) {
         this.changeToken(token)
+        // 动态获取部门和列表数据
+        AppStore.getInitialDataAction()
       }
       const userInfo = localCache.getCache('userInfo')
       if (userInfo) {
