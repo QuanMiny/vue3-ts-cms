@@ -1,7 +1,12 @@
 import { defineStore } from 'pinia'
 import { store } from '@/store'
 import { ISystemState } from './type'
-import { getPageListData, deletePageData } from '@/service/system'
+import {
+  getPageListData,
+  deletePageData,
+  createPageData,
+  editPageData
+} from '@/service/system'
 
 export const useSystemStore = defineStore({
   id: 'app-system',
@@ -51,10 +56,36 @@ export const useSystemStore = defineStore({
       this.changeList(list, pageName)
       this.changeCount(totalCount, pageName)
     },
+    /**
+     *
+     * @description 删除某行数据
+     */
     async deletePageDataAction(payload: any) {
       const { pageName, id } = payload
       const deleteUrl = `/${pageName}/${id}`
       await deletePageData(deleteUrl)
+      this.getPageListAction({
+        pageName: pageName,
+        queryInfo: { offset: 0, size: 10 }
+      })
+    },
+    /**
+     *
+     * @description 新建某行数据
+     */
+    async createPageDataAction(payload: any) {
+      const { pageName, newData } = payload
+      const createUrl = `/${pageName}/`
+      await createPageData(createUrl, newData)
+      this.getPageListAction({
+        pageName: pageName,
+        queryInfo: { offset: 0, size: 10 }
+      })
+    },
+    async editPageDataAction(payload: any) {
+      const { pageName, editData, id } = payload
+      const editUrl = `/${pageName}/${id}`
+      await editPageData(editUrl, editData)
       this.getPageListAction({
         pageName: pageName,
         queryInfo: { offset: 0, size: 10 }

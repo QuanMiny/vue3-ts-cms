@@ -11,7 +11,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">
+          <el-button type="primary" @click="handleConfirmClick">
             确定
           </el-button>
         </span>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import YmForm from '@/base-ui/form'
 import { ref, defineProps, defineExpose, watch } from 'vue'
+import { useSystemStoreWithOut } from '@/store/system'
 
 const props = defineProps({
   modalConfig: {
@@ -32,6 +33,10 @@ const props = defineProps({
   defaultInfo: {
     type: Object,
     default: () => ({})
+  },
+  pageName: {
+    type: String,
+    require: true
   }
 })
 
@@ -47,6 +52,25 @@ watch(
     }
   }
 )
+
+const SystemStore = useSystemStoreWithOut()
+const handleConfirmClick = () => {
+  dialogVisible.value = false
+  if (Object.keys(props.defaultInfo).length) {
+    // 编辑
+    SystemStore.editPageDataAction({
+      pageName: props.pageName,
+      editData: { ...formData.value },
+      id: props.defaultInfo.id
+    })
+  } else {
+    // 新建
+    SystemStore.createPageDataAction({
+      pageName: props.pageName,
+      newData: { ...formData.value }
+    })
+  }
+}
 
 defineExpose({ dialogVisible })
 </script>
