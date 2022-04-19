@@ -1,7 +1,10 @@
+import { useAppStoreWithOut } from '@/store/app'
 import { useLoginStoreWithOut } from '@/store/login'
 
+const AppStore = useAppStoreWithOut()
 const LoginStore = useLoginStoreWithOut()
 
 export function initAppConfigStore() {
-  return LoginStore.loadLocalLogin()
+  AppStore.getInitialDataAction()
+  LoginStore.loadLocalLogin()
 }
