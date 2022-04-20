@@ -2,12 +2,13 @@
   <div class="page-modal">
     <el-dialog
       v-model="dialogVisible"
-      title="Warning"
+      title="新建/编辑数据"
       width="30%"
       center
       destroy-on-close
     >
       <ym-form v-bind="modalConfig" v-model="formData"></ym-form>
+      <slot></slot>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
@@ -31,6 +32,10 @@ const props = defineProps({
     require: true
   },
   defaultInfo: {
+    type: Object,
+    default: () => ({})
+  },
+  otherInfo: {
     type: Object,
     default: () => ({})
   },
@@ -60,14 +65,14 @@ const handleConfirmClick = () => {
     // 编辑
     SystemStore.editPageDataAction({
       pageName: props.pageName,
-      editData: { ...formData.value },
+      editData: { ...formData.value, ...props.otherInfo },
       id: props.defaultInfo.id
     })
   } else {
     // 新建
     SystemStore.createPageDataAction({
       pageName: props.pageName,
-      newData: { ...formData.value }
+      newData: { ...formData.value, ...props.otherInfo }
     })
   }
 }
